@@ -29,9 +29,9 @@ export default async function handler(req, res) {
     }
 
     if (method === 'PUT') {
-      const { title, amount, date } = req.body || {};
+      const { title, amount, category, date } = req.body || {};
 
-      // ✅ validation
+      // validation
       if (!title || typeof title !== 'string') {
         return res.status(400).json({ message: 'Title is required (string)' });
       }
@@ -41,11 +41,14 @@ export default async function handler(req, res) {
       if (date && isNaN(Date.parse(date))) {
         return res.status(400).json({ message: 'Date must be valid ISO string' });
       }
+      if (!category) {
+        return res.status(400).json({ message: 'Category is required' });
+      }
 
       expense.title = title.trim();
       expense.amount = Number(amount);
       expense.date = date ? new Date(date) : expense.date;
-
+      expense.category = category || expense.category || 'Other';
       await expense.save();
       return res.status(200).json({ expense });
     }

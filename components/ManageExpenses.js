@@ -9,23 +9,26 @@ export default function ManageExpense({ expense = null, onClose }) {
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('Other');
   const [date, setDate] = useState('');
 
   useEffect(() => {
     if (isEdit) {
       setTitle(expense.title || '');
       setAmount(String(expense.amount || ''));
+      setCategory(expense.category || 'Other');
       setDate(new Date(expense.date).toISOString().slice(0, 10));
     } else {
       setTitle('');
       setAmount('');
+      setCategory('Other');
       setDate(new Date().toISOString().slice(0, 10));
     }
   }, [expense]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { title, amount: Number(amount), date };
+    const payload = { title, amount: Number(amount), category: category, date };
 
     if (isEdit) {
       await updateExpense(expense._id, payload);
@@ -50,6 +53,24 @@ export default function ManageExpense({ expense = null, onClose }) {
             Amount
             <input required type="number" step="0.01" className="mt-1 block w-full border rounded px-3 py-2" value={amount} onChange={(e) => setAmount(e.target.value)} />
           </label>
+
+          <label className="block text-sm">
+            Category
+            <select
+              required
+              className="mt-1 block w-full border rounded px-3 py-2"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="Food">Food</option>
+              <option value="Rent">Rent</option>
+              <option value="Travel">Travel</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
           <label className="block text-sm">
             Date
             <input required type="date" className="mt-1 block w-full border rounded px-3 py-2" value={date} onChange={(e) => setDate(e.target.value)} />

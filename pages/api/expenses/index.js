@@ -27,9 +27,9 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { title, amount, date } = req.body || {};
+      const { title, amount, category, date } = req.body || {};
 
-      // ✅ basic validation
+      // basic validation
       if (!title || typeof title !== 'string') {
         return res.status(400).json({ message: 'Title is required (string)' });
       }
@@ -40,10 +40,15 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Date must be valid ISO string' });
       }
 
+      if (!category) {
+        return res.status(400).json({ message: 'Category is required' });
+      }
+
       const expense = await Expense.create({
         title: title.trim(),
         amount: Number(amount),
         date: date ? new Date(date) : new Date(),
+        category,
         userId: userData.userId,
       });
 

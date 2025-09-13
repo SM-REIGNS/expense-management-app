@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
         <main className="py-6">
           <Component {...pageProps} />
         </main>
-        <ToastContainer position="top-right" />
+        <ToastContainer position="top-right" autoClose={2000} />
       </div>
     </AppProvider>
   );
