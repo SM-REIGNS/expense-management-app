@@ -31,10 +31,10 @@ export function AppProvider({ children }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Signup failed');
       setUser(data.user);
-      toast.success('Account created');
+      toast.success('Account created', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Signup error');
+      toast.error(err.message || 'Signup error', { autoClose: 5000 });
       return false;
     }
   };
@@ -48,10 +48,10 @@ export function AppProvider({ children }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Login failed');
       setUser(data.user);
-      toast.success('Logged in');
+      toast.success('Logged in', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Login error');
+      toast.error(err.message || 'Login error', { autoClose: 5000 });
       return false;
     }
   };
@@ -65,10 +65,10 @@ export function AppProvider({ children }) {
       }
       setUser(null);
       setExpenses([]);
-      toast.success('Logged out');
+      toast.success('Logged out', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Logout error');
+      toast.error(err.message || 'Logout error', { autoClose: 5000 });
       return false;
     }
   };
@@ -83,41 +83,41 @@ export function AppProvider({ children }) {
       return true;
     } catch (err) {
       // don't spam user on initial fail; only toast when authenticated
-      if (user) toast.error(err.message || 'Could not load expenses');
+      if (user) toast.error(err.message || 'Could not load expenses', { autoClose: 5000 });
       return false;
     }
   };
 
-  const createExpense = async ({ title, amount, date }) => {
+  const createExpense = async ({ title, amount, category, date }) => {
     try {
       const res = await baseFetch('/api/expenses', {
         method: 'POST',
-        body: JSON.stringify({ title, amount, date })
+        body: JSON.stringify({ title, amount, category, date })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Failed to create expense');
       setExpenses((prev) => [data.expense, ...prev]);
-      toast.success('Expense added');
+      toast.success('Expense added', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Create expense error');
+      toast.error(err.message || 'Create expense error', { autoClose: 5000 });
       return false;
     }
   };
 
-  const updateExpense = async (id, { title, amount, date }) => {
+  const updateExpense = async (id, { title, amount, category, date }) => {
     try {
       const res = await baseFetch(`/api/expenses/${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ title, amount, date })
+        body: JSON.stringify({ title, amount, category, date })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Failed to update expense');
       setExpenses((prev) => prev.map((e) => (e._id === id ? data.expense : e)));
-      toast.success('Expense updated');
+      toast.success('Expense updated', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Update expense error');
+      toast.error(err.message || 'Update expense error', { autoClose: 5000 });
       return false;
     }
   };
@@ -128,10 +128,10 @@ export function AppProvider({ children }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Failed to delete expense');
       setExpenses((prev) => prev.filter((e) => e._id !== id));
-      toast.success('Expense deleted');
+      toast.success('Expense deleted', { autoClose: 1000 });
       return true;
     } catch (err) {
-      toast.error(err.message || 'Delete expense error');
+      toast.error(err.message || 'Delete expense error', { autoClose: 5000 });
       return false;
     }
   };
