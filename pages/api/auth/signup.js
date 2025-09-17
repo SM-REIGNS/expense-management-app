@@ -3,10 +3,6 @@
 import bcrypt from 'bcryptjs';
 import { connectToDatabase } from '../../../lib/db';
 import User from '../../../lib/models/User';
-import { signToken } from '../../../lib/auth';
-import cookie from 'cookie';
-import crypto from 'crypto';
-import { sendVerificationEmail } from '../../../lib/email';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../../../lib/email';
 
