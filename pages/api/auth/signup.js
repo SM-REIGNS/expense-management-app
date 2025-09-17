@@ -7,6 +7,8 @@ import { signToken } from '../../../lib/auth';
 import cookie from 'cookie';
 import crypto from 'crypto';
 import { sendVerificationEmail } from '../../../lib/email';
+import crypto from 'crypto';
+import { sendVerificationEmail } from '../../../lib/email';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -48,18 +50,6 @@ export default async function handler(req, res) {
 
     const user = await User.create({ email: email.toLowerCase().trim(), passwordHash, verificationToken });
 
-    // const token = signToken({ userId: user._id, email: user.email });
-
-    // res.setHeader(
-    //   'Set-Cookie',
-    //   cookie.serialize('token', token, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === 'production',
-    //     sameSite: 'lax',
-    //     path: '/',
-    //     maxAge: 60 * 60 * 24 * 7, // 7 days
-    //   })
-    // );
 
     // Send verification email
     const sent = await sendVerificationEmail(email, verificationToken);
@@ -69,7 +59,6 @@ export default async function handler(req, res) {
 
     return res.status(201).json({ message: 'Signup successful! Please check your email to verify your account.' });
 
-    // return res.status(201).json({ user: { id: user._id, email: user.email } });
   } catch (err) {
     console.error('Signup error', err);
     return res.status(500).json({ message: 'Internal server error' });
