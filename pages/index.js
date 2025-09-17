@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-6">
       <div className="max-w-2xl mx-auto text-center mt-12">
-        <h1 className="text-3xl font-bold mb-4">Expense Management (MVP)</h1>
+        <h1 className="text-3xl font-bold mb-4">Expense Management</h1>
         <p className="text-gray-600 mb-6">
           Track simple expenses — signup and get started in seconds.
         </p>
