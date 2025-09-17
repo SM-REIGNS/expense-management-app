@@ -31,7 +31,7 @@ export function AppProvider({ children }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Signup failed');
       setUser(data.user);
-      toast.success('Account created', { autoClose: 1000 });
+      toast.success(data?.message || 'Account Created', { autoClose: 3000 });
       return true;
     } catch (err) {
       toast.error(err.message || 'Signup error', { autoClose: 5000 });

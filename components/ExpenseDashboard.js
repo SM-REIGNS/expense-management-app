@@ -63,6 +63,33 @@ export default function ExpenseDashboard() {
     });
   }, [expenses, month, year]);
 
+  const totalAmount = useMemo(() => {
+    return filteredExpenses.reduce((sum, ex) => sum + ex.amount, 0);
+  }, [filteredExpenses]);
+
+  const avgPerDay = useMemo(() => {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    return totalAmount / daysInMonth;
+  }, [totalAmount, month, year]);
+
+  const highestCategory = useMemo(() => {
+    if (filteredExpenses.length === 0) return null;
+    const catTotals = {};
+    filteredExpenses.forEach((ex) => {
+      catTotals[ex.category || 'Other'] = (catTotals[ex.category || 'Other'] || 0) + ex.amount;
+    });
+    const [maxCat, maxVal] = Object.entries(catTotals).reduce(
+      (a, b) => (b[1] > a[1] ? b : a)
+    );
+    return { category: maxCat, amount: maxVal };
+  }, [filteredExpenses]);
+
+  const largestExpense = useMemo(() => {
+    if (filteredExpenses.length === 0) return null;
+    return filteredExpenses.reduce((max, ex) => (ex.amount > max.amount ? ex : max), filteredExpenses[0]);
+  }, [filteredExpenses]);
+
+
   // Pie Chart Data (group by title just for demo)
   const pieData = useMemo(() => {
     const groups = {};
@@ -146,6 +173,51 @@ export default function ExpenseDashboard() {
           className="border rounded px-2 py-1 w-24"
         />
       </div>
+
+      {/* Summary */}
+      <div className="grid md:grid-cols-4 gap-4">
+        {/* Total */}
+        <div className="bg-white p-4 rounded shadow text-center">
+          <h2 className="text-sm font-medium text-gray-500">Total</h2>
+          <p className="text-xl font-bold text-indigo-600">
+            ₹ {totalAmount.toFixed(2)}
+          </p>
+        </div>
+
+        {/* Avg per day */}
+        <div className="bg-white p-4 rounded shadow text-center">
+          <h2 className="text-sm font-medium text-gray-500">Avg / day</h2>
+          <p className="text-xl font-bold text-green-600">
+            ₹ {avgPerDay.toFixed(2)}
+          </p>
+        </div>
+
+        {/* Highest category */}
+        <div className="bg-white p-4 rounded shadow text-center">
+          <h2 className="text-sm font-medium text-gray-500">Top Category</h2>
+          {highestCategory ? (
+            <p className="text-xl font-bold text-purple-600">
+              {highestCategory.category} ({highestCategory.amount.toFixed(2)})
+            </p>
+          ) : (
+            <p className="text-gray-400">—</p>
+          )}
+        </div>
+
+        {/* Largest expense */}
+        <div className="bg-white p-4 rounded shadow text-center">
+          <h2 className="text-sm font-medium text-gray-500">Largest Expense</h2>
+          {largestExpense ? (
+            <p className="text-xl font-bold text-red-600">
+              {largestExpense.title} ({largestExpense.amount.toFixed(2)})
+            </p>
+          ) : (
+            <p className="text-gray-400">—</p>
+          )}
+        </div>
+      </div>
+
+
 
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-6">
